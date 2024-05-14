@@ -2,8 +2,10 @@ var path = require('path');
 const express = require('express');
 const morgan = require('morgan');
 const handlebars = require('express-handlebars');
-const app = express() // trả về 1 đối tượng app để xây dụng web 
+const app = express() // trả về 1 đối tượng app để xây dụng web -+
 const port = 3000 // cổng khi chạy
+
+const route = require("./routers/index")
 
 app.use(express.urlencoded({
   extended: true
@@ -15,7 +17,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // HTTP logger
 app.use(morgan('combined'));
-
 // Template engines
 // app.engine('handlebars', handlebars());
 app.engine('hbs', handlebars.engine({
@@ -23,23 +24,12 @@ app.engine('hbs', handlebars.engine({
 }));
 app.set('view engine', 'hbs');
 app.set('views', path.join(__dirname, 'resources/views'));
-// console.log("PATH", path.join(__dirname, 'resources/views'));
+
+// route init
+route(app);
 
 // định nghĩa router
-app.get('/', (req, res) => {
-  res.render('home');
-});
-
-app.get('/news', (req, res) => {
-  res.render('news');
-});
-app.get('/search', (req, res) => {
-  res.render('search');
-});
-app.post('/search', (req, res) => {
-  console.log(req.body);
-  res.send('');
-});
+// action --> Dispatcher --> Function handler 
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
