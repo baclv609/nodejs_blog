@@ -1,0 +1,9 @@
+@import "./variable";
+h2 {
+  color: $red-color;
+  text-align: center;
+  font-size: 2rem;
+}
+p {
+  color: #aaa;
+}
