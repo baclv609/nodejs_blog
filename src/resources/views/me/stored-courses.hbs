@@ -1,0 +1,72 @@
+<div class="mt-4">
+  <h3>Khóa học của tôi</h3>
+  <table class="table mt-4">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Tên khóa học</th>
+        <th scope="col">Trình độ</th>
+        <th scope="col">Thời gian tạo</th>
+        <th scope="col">Hành động</th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each courses}}
+        <tr>
+          <th scope="row">{{sum @index 1}}</th>
+          <td>{{this.name}}</td>
+          <td>{{this.lever}}</td>
+          <td>{{this.createdAt}}</td>
+          <td>
+            <a href="/courses/{{this._id}}/edit" class="btn btn-link">Sửa</a>
+            <a href="#" class="btn btn-link" data-toggle="modal" data-target="#delete-course-modal" data-id="{{this._id}}">Xóa</a>
+          </td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</div>
+
+{{! modal confirm }}
+<div id="delete-course-modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Xóa khóa học</h5>
+      </div>
+      <div class="modal-body">
+        <p>Bạn có chắc muốn xóa.</p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-delete-couse" type="button" class="btn btn-danger">Xóa</button>
+        <button
+          type="button"
+          class="btn btn-secondary"
+          data-dismiss="modal"
+        >Hủy</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{!-- delete hidden from --}}
+ <form method="POST" name="delete-course-from"></form>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    var idCourse;
+    var deleteFrom = document.forms['delete-course-from']; // lấy ra from ẩn 
+    var btnDeleteCouse = document.getElementById('btn-delete-couse');
+
+    // when dialog confirm clicked 
+    $('#delete-course-modal').on('show.bs.modal', function (event) {
+        var button = $(event.relatedTarget) 
+        idCourse = button.data('id') ;
+        console.log(idCourse)
+    })
+    btnDeleteCouse.onclick = () => {
+      deleteFrom.action = '/courses/' + idCourse + '?_method=DELETE'; // set lại action 
+      deleteFrom.submit(); // gọi tới hàm submit
+    }
+  })
+</script>
