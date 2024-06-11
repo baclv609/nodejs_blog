@@ -35,7 +35,7 @@ class CourseController {
     // [post] /courses/store
     store(req, res, next) {
         // res.json(req.body);
-        const formData = req.body;
+        const formData = { ...req.body };
         formData.image = `https://img.youtube.com/vi/${req.body.videoID}/sddefault.jpg`
         const course = new courses(formData);
         course.save()
@@ -51,9 +51,22 @@ class CourseController {
     }
     // [DELETE] /courses/:id/delete
     delete(req, res, next) {
+        courses.delete({ _id: req.params.id })
+            .then(() => res.redirect('back')) // xóa xong sẽ qua trỏ về trang trước đó
+            .catch(next)
+    }
+
+    // [PATCH] /courses/:id/restore
+    restore(req, res, next) {
+        courses.restore({ _id: req.params.id })
+            .then(() => res.redirect('back'))
+            .catch(next)
+    }
+    // [DELETE] /courses/:id/force
+    forceDelete(req, res, next) {
         courses.deleteOne({ _id: req.params.id })
-        .then(()=> res.redirect('back')) // xóa xong sẽ qua trỏ về trang trước đó
-        .catch(next)
+            .then(() => res.redirect('back')) // xóa xong sẽ qua trỏ về trang trước đó
+            .catch(next)
     }
 }
 
