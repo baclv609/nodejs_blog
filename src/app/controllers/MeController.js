@@ -2,9 +2,19 @@ const courses = require("../models/Courses");// import model vào controller
 const { mongooseToObject, mutipleMongooseToObject } = require("../../util/mongoose");
 
 class MeController {
+
     // [post] //stored/courses
     storedCourses(req, res, next) {
-        Promise.all([courses.find({}), courses.countDocumentsDeleted()]) // trả về mảng chứa 2 phần tử
+
+        // res.json(res.locals._sort)
+        let courseQuery = courses.find({});
+        if (req.query.hasOwnProperty('_sort')) {
+            courseQuery = courseQuery.sort({
+                [req.query.column]: req.query.type
+            })
+        }
+
+        Promise.all([courseQuery, courses.countDocumentsDeleted()]) // trả về mảng chứa 2 phần tử
             .then(([courses, deletedCount]) => {
 
                 res.render('me/stored-courses', {
