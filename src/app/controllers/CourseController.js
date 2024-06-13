@@ -51,7 +51,7 @@ class CourseController {
     }
     // [DELETE] /courses/:id/delete
     delete(req, res, next) {
-        courses.delete({ _id: req.params.id })
+        courses.delete({ _id: req.params.id }) // xóa mềm
             .then(() => res.redirect('back')) // xóa xong sẽ qua trỏ về trang trước đó
             .catch(next)
     }
@@ -68,6 +68,33 @@ class CourseController {
             .then(() => res.redirect('back')) // xóa xong sẽ qua trỏ về trang trước đó
             .catch(next)
     }
+
+    // [POST] /courses/handle-form-action
+    handleFormAction(req, res, next) {
+        // res.json(req.body.action);
+        switch (req.body.action) {
+            case "delete":
+                courses.delete({ _id: { $in: req.body.coursesId } }) // $in loop qua array
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break;
+            case "restore":
+                courses.restore({ _id: { $in: req.body.coursesId } })
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break;
+            case "deleteOne": // xóa cứng       
+                // deleteMany xóa cứng nhiều phần tử đã chọn 
+                courses.deleteMany({ _id: { $in: req.body.coursesId } })
+                    .then(() => res.redirect('back'))
+                    .catch(next)
+                break;
+            default:
+                res.json({ message: "Action is invalid" })
+                break;
+        }
+    }
+
 }
 
 module.exports = new CourseController; 

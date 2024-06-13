@@ -3,7 +3,6 @@ const slug = require('mongoose-slug-updater'); // import slug để tạo slug
 const mongooseDelete = require('mongoose-delete'); // import mongoose-delete để xóa mềm 
 
 
-
 const Schema = mongoose.Schema;
 
 // Schema tạo ra các field trong database   
@@ -25,4 +24,5 @@ courses.plugin(mongooseDelete, {
     deletedAt: true, // lưu thời gian xóa 
     overrideMethods: 'all', 
 }) // sử dụng mongoose-delete để xóa mềm 
+
 module.exports = mongoose.model('courses', courses);

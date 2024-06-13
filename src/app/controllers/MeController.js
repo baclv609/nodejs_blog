@@ -4,10 +4,14 @@ const { mongooseToObject, mutipleMongooseToObject } = require("../../util/mongoo
 class MeController {
     // [post] //stored/courses
     storedCourses(req, res, next) {
-        courses.find({})
-            .then(courses => res.render('me/stored-courses', {
-                courses: mutipleMongooseToObject(courses) // chuyển từ mảng mongoose sang mảng object 
-            }))
+        Promise.all([courses.find({}), courses.countDocumentsDeleted()]) // trả về mảng chứa 2 phần tử
+            .then(([courses, deletedCount]) => {
+
+                res.render('me/stored-courses', {
+                    courses: mutipleMongooseToObject(courses),
+                    deletedCount: deletedCount, // số lượng document đã xóa
+                })
+            })
             .catch(next);
     }
     // [GET] /trash/courses
